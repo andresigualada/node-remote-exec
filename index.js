@@ -23,6 +23,10 @@ function RemoteExec(hosts, commands, options, cb) {
   // default options
   if (!options) options = {};
   if (!options.port) options.port = 22;
+
+  if (!options.exec_options) {
+      options.exec_options = {}
+  }
   
   // grab refs to overloaded outputs if specified (defaults to process.stdout and process.stderr)
   if (options.stdout && options.stdout.write instanceof Function) {
@@ -96,7 +100,7 @@ function RemoteExec(hosts, commands, options, cb) {
       }
 
       // run the current command
-      connection.exec(command, function(err, stream){
+      connection.exec(command, options.exec_options, function(err, stream){
         if (err) done(err);
         
         // forward output to specified stream based on extended (null || stderr)
